@@ -45,8 +45,9 @@ clock = pygame.time.Clock()
 class GameObject:
     """Базовый класс"""
 
-    body_color = BOARD_BACKGROUND_COLOR # Будет перезадан в дочерних классах
-    def __init__(self, body_color = SNAKE_COLOR):
+    body_color = BOARD_BACKGROUND_COLOR  # Будет перезадан в дочерних классах
+   
+    def __init__(self, body_color=SNAKE_COLOR):
         """Метод инициализирует базовые атрибуты объекта"""
         self.position = (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT / 2 - 20)
         self.body_color = body_color
@@ -54,7 +55,7 @@ class GameObject:
     def draw(self):
         """Абстрактный метод"""
         pass
-    
+
 class Apple(GameObject):
     """Класс яблока на игровом поле"""
 
@@ -65,7 +66,9 @@ class Apple(GameObject):
 
     def randomize_position(self):
         """Метод возвращает рандомные координаты на поле"""
-        return (randint(0, SCREEN_WIDTH - 20) // 20 * 20, randint(0, SCREEN_HEIGHT - 20) // 20 * 20)
+        cord_y = randint(0, SCREEN_WIDTH - 20) // 20 * 20
+        cord_x = randint(0, SCREEN_HEIGHT - 20) // 20 * 20
+        return (cord_x, cord_y)
 
 
     def draw(self, surface):
@@ -76,6 +79,7 @@ class Apple(GameObject):
         )
         pygame.draw.rect(surface, self.body_color, rect)
         pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
+
 
 class Snake(GameObject):
     """Класс персонажа, за которого будет играть игкрок (змейки).""" 
@@ -165,6 +169,7 @@ def handle_keys(game_object):
             elif event.key == pygame.K_RIGHT and game_object.direction != LEFT:
                 game_object.next_direction = RIGHT
 
+
 def main():
     """Главная функция игры"""
     snake = Snake()
@@ -190,5 +195,6 @@ def main():
                     Check = False
                     apple.position = apple.randomize_position()
               
+
 if __name__ == '__main__':
     main()
