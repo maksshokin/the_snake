@@ -49,7 +49,7 @@ class GameObject:
 
     def __init__(self, body_color=SNAKE_COLOR):
         """Метод инициализирует базовые атрибуты объекта"""
-        self.position = (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT / 2 - 20)
+        self.position = (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT // 2 - 20)
         self.body_color = body_color
 
     def draw(self):
@@ -67,8 +67,9 @@ class Apple(GameObject):
 
     def randomize_position(self):
         """Метод возвращает рандомные координаты на поле"""
-        cord_y = randint(0, SCREEN_WIDTH - 20) // 20 * 20
-        cord_x = randint(0, SCREEN_HEIGHT - 20) // 20 * 20
+        cord_x = randint(0, SCREEN_WIDTH - 20) // 20 * 20
+        cord_y = randint(0, SCREEN_HEIGHT - 20) // 20 * 20
+        print(cord_x, cord_y)
         return (cord_x, cord_y)
 
     def draw(self, surface):
