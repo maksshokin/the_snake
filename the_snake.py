@@ -69,7 +69,6 @@ class Apple(GameObject):
         """Метод возвращает рандомные координаты на поле"""
         cord_x = randint(0, SCREEN_WIDTH - 20) // 20 * 20
         cord_y = randint(0, SCREEN_HEIGHT - 20) // 20 * 20
-        print(cord_x, cord_y)
         return (cord_x, cord_y)
 
     def draw(self, surface):
