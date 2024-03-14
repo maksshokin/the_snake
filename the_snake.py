@@ -100,11 +100,11 @@ class Snake(GameObject):
         head = self.get_head_position()
         directed_right = head[0] + self.direction[0] * 20
         directed_left = head[1] + self.direction[1] * 20
-        New_head = (directed_right, directed_left)
+        new_head = (directed_right, directed_left)
         self.positions.insert(0, (directed_right, directed_left))
         # Проверка на столкновение с телом
         for pos in self.positions[1:]:
-            if New_head == pos:
+            if new_head == pos:
                 self.reset()
 
         # Телепорт на противоположную сторону
