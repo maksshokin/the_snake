@@ -2,6 +2,8 @@ from random import randint
 
 import pygame
 
+import sys
+
 # Инициализация PyGame:
 pygame.init()
 
@@ -17,16 +19,10 @@ DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
 
-# Цвет фона - черный:
+# Цвета фона и игровых объектов:
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
-
-# Цвет границы ячейки
 BORDER_COLOR = (93, 216, 228)
-
-# Цвет яблока
 APPLE_COLOR = (255, 0, 0)
-
-# Цвет змейки
 SNAKE_COLOR = (0, 255, 0)
 
 # Скорость движения змейки:
@@ -54,7 +50,7 @@ class GameObject:
 
     def draw(self):
         """Абстрактный метод"""
-        pass
+        NotImplementedError
 
 
 class Apple(GameObject):
@@ -102,23 +98,23 @@ class Snake(GameObject):
     def move(self):
         """Метод, отвечающий за движение змейки."""
         head = self.get_head_position()
-        cord_x = head[0] + self.direction[0] * 20
-        cord_y = head[1] + self.direction[1] * 20
-        New_head = (cord_x, cord_y)
-        self.positions.insert(0, (cord_x, cord_y))
+        directed_right = head[0] + self.direction[0] * 20
+        directed_left = head[1] + self.direction[1] * 20
+        New_head = (directed_right, directed_left)
+        self.positions.insert(0, (directed_right, directed_left))
         # Проверка на столкновение с телом
         for pos in self.positions[1:]:
             if New_head == pos:
                 self.reset()
 
         # Телепорт на противоположную сторону
-        if cord_x > SCREEN_WIDTH - 20:
+        if directed_right > SCREEN_WIDTH - 20:
             self.positions[0] = (0, self.positions[0][1])
-        elif cord_x < 0:
+        elif directed_right < 0:
             self.positions[0] = (SCREEN_WIDTH - 20, self.positions[0][1])
-        if cord_y > SCREEN_HEIGHT - 20:
+        if directed_left > SCREEN_HEIGHT - 20:
             self.positions[0] = (self.positions[0][0], 0)
-        elif cord_y < 0:
+        elif directed_left < 0:
             self.positions[0] = (self.positions[0][0], SCREEN_HEIGHT - 20)
         pass
 
@@ -138,7 +134,7 @@ class Snake(GameObject):
 
         # Удаление последнего сегмента из списка
         if len(self.positions) != self.length:
-            self.positions.pop(-1)
+            self.positions.pop()
 
     def get_head_position(self):
         """Метод возыращает координаты головы."""
@@ -158,7 +154,7 @@ def handle_keys(game_object):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            raise SystemExit
+            raise sys.exit()
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP and game_object.direction != DOWN:
                 game_object.next_direction = UP
@@ -189,10 +185,10 @@ def main():
             snake.length += 1
 
             # Создание нового яблока в месте, где нет хвоста и головы змеи
-            Check = True
-            while Check:
+            place_not_found = True
+            while place_not_found:
                 if not apple.randomize_position() in snake.positions:
-                    Check = False
+                    place_not_found = False
                     apple.position = apple.randomize_position()
 
 
