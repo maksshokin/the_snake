@@ -108,14 +108,16 @@ class Snake(GameObject):
                 self.reset()
 
         # Телепорт на противоположную сторону
-        if directed_right > SCREEN_WIDTH - GRID_SIZE:
+        height = SCREEN_HEIGHT - GRID_SIZE
+        width = SCREEN_WIDTH - GRID_SIZE
+        if directed_right > width:
             self.positions[0] = (0, self.positions[0][1])
         elif directed_right < 0:
-            self.positions[0] = (SCREEN_WIDTH - GRID_SIZE, self.positions[0][1])
-        if directed_left > SCREEN_HEIGHT - GRID_SIZE:
+            self.positions[0] = (width, self.positions[0][1])
+        if directed_left > height:
             self.positions[0] = (self.positions[0][0], 0)
         elif directed_left < 0:
-            self.positions[0] = (self.positions[0][0], SCREEN_HEIGHT - GRID_SIZE)
+            self.positions[0] = (self.positions[0][0], height)
         pass
 
     def draw(self, surface):
@@ -188,7 +190,7 @@ def main():
             place_not_found = True
             while place_not_found:
                 checker = apple.randomize_position()
-                if not checker in snake.positions:
+                if checker not in snake.positions:
                     place_not_found = False
                     apple.position = checker
 
