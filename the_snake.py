@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice
 
 import pygame
 
@@ -45,7 +45,7 @@ class GameObject:
 
     def __init__(self, body_color=SNAKE_COLOR):
         """Метод инициализирует базовые атрибуты объекта"""
-        self.position = (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT // 2 - 20)
+        self.position = (SCREEN_WIDTH // 2 - GRID_SIZE, SCREEN_HEIGHT // 2 - GRID_SIZE)
         self.body_color = body_color
 
     def draw(self):
@@ -63,8 +63,8 @@ class Apple(GameObject):
 
     def randomize_position(self):
         """Метод возвращает рандомные координаты на поле"""
-        cord_x = randint(0, SCREEN_WIDTH - 20) // 20 * 20
-        cord_y = randint(0, SCREEN_HEIGHT - 20) // 20 * 20
+        cord_x = randint(0, SCREEN_WIDTH - GRID_SIZE) // GRID_SIZE * GRID_SIZE
+        cord_y = randint(0, SCREEN_HEIGHT - GRID_SIZE) // GRID_SIZE * GRID_SIZE
         return (cord_x, cord_y)
 
     def draw(self, surface):
@@ -98,8 +98,8 @@ class Snake(GameObject):
     def move(self):
         """Метод, отвечающий за движение змейки."""
         head = self.get_head_position()
-        directed_right = head[0] + self.direction[0] * 20
-        directed_left = head[1] + self.direction[1] * 20
+        directed_right = head[0] + self.direction[0] * GRID_SIZE
+        directed_left = head[1] + self.direction[1] * GRID_SIZE
         new_head = (directed_right, directed_left)
         self.positions.insert(0, (directed_right, directed_left))
         # Проверка на столкновение с телом
@@ -108,14 +108,14 @@ class Snake(GameObject):
                 self.reset()
 
         # Телепорт на противоположную сторону
-        if directed_right > SCREEN_WIDTH - 20:
+        if directed_right > SCREEN_WIDTH - GRID_SIZE:
             self.positions[0] = (0, self.positions[0][1])
         elif directed_right < 0:
-            self.positions[0] = (SCREEN_WIDTH - 20, self.positions[0][1])
-        if directed_left > SCREEN_HEIGHT - 20:
+            self.positions[0] = (SCREEN_WIDTH - GRID_SIZE, self.positions[0][1])
+        if directed_left > SCREEN_HEIGHT - GRID_SIZE:
             self.positions[0] = (self.positions[0][0], 0)
         elif directed_left < 0:
-            self.positions[0] = (self.positions[0][0], SCREEN_HEIGHT - 20)
+            self.positions[0] = (self.positions[0][0], SCREEN_HEIGHT - GRID_SIZE)
         pass
 
     def draw(self, surface):
@@ -143,7 +143,7 @@ class Snake(GameObject):
     def reset(self):
         """Метод сбрасывает все до стартовых показателей."""
         self.length = 1
-        self.direction = RIGHT
+        self.direction = choice([UP, DOWN, LEFT, RIGHT])
         self.next_direction = None
         self.positions = [self.position]
         self.body_color = SNAKE_COLOR
@@ -154,7 +154,7 @@ def handle_keys(game_object):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            raise sys.exit()
+            sys.exit()
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP and game_object.direction != DOWN:
                 game_object.next_direction = UP
@@ -173,11 +173,11 @@ def main():
     while True:
         clock.tick(SPEED)
         screen.fill(BOARD_BACKGROUND_COLOR)
-        Snake.draw(snake, screen)
-        Apple.draw(apple, screen)
-        Snake.update_direction(snake)
+        snake.draw(screen)
+        apple.draw(screen)
+        snake.update_direction()
         handle_keys(snake)
-        Snake.move(snake)
+        snake.move()
         pygame.display.update()
 
         # Проверка на "столкновение" с яблоком
@@ -187,9 +187,10 @@ def main():
             # Создание нового яблока в месте, где нет хвоста и головы змеи
             place_not_found = True
             while place_not_found:
-                if not apple.randomize_position() in snake.positions:
+                checker = apple.randomize_position()
+                if not checker in snake.positions:
                     place_not_found = False
-                    apple.position = apple.randomize_position()
+                    apple.position = checker
 
 
 if __name__ == '__main__':
