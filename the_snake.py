@@ -45,7 +45,10 @@ class GameObject:
 
     def __init__(self, body_color=SNAKE_COLOR):
         """Метод инициализирует базовые атрибуты объекта"""
-        self.position = (SCREEN_WIDTH // 2 - GRID_SIZE, SCREEN_HEIGHT // 2 - GRID_SIZE)
+        self.position = (
+            SCREEN_WIDTH // 2 - GRID_SIZE,
+            SCREEN_HEIGHT // 2 - GRID_SIZE
+            )
         self.body_color = body_color
 
     def draw(self):
